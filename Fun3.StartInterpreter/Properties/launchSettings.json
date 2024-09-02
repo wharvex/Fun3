@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Fun3.StartInterpreter": {
+      "commandName": "Project",
+      "commandLineArgs": "test.fun3",
+      "workingDirectory": "$(SolutionDir)"
+    }
+  }
+}

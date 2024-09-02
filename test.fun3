@@ -1,0 +1,12 @@
+### comment
+
+let fun greet...
+let arg str name
+    see "hi, " + name
+
+let fun begin...
+let loc int age
+    run greet "tim"
+    set age, 36
+    iff 38 > age > 35...
+        see "you're almost not old"
