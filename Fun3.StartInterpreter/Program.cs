@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-using System.Text.RegularExpressions;
-using Fun3.Lexers;
+﻿using Fun3.ProviderCreators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Fun3.StartInterpreter
@@ -11,12 +9,10 @@ namespace Fun3.StartInterpreter
         {
             Console.WriteLine("Hello, World!");
             var lines = File.ReadAllLines(args[0]);
-
-            var pattern = @"\w+";
-            var rg = new Regex(pattern);
-
-            var match = rg.Match(lines[0]);
-            Console.WriteLine(match.Success ? match.Index : "not found");
+            var pc = new DefaultProviderCreator();
+            pc.ConfigureProvider(lines);
+            var lexer = ProviderContainer.Provider.GetRequiredService<ILexer>();
+            lexer.Lex();
         }
     }
 }

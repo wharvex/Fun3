@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Fun3.Lexers;
 
@@ -11,6 +12,10 @@ public class DefaultLexer(string[] lines) : ILexer
 
     public void Lex()
     {
-        throw new NotImplementedException();
+        var pattern = @"\w+";
+        var rg = new Regex(pattern);
+
+        var match = rg.Match(Lines[0]);
+        Console.WriteLine(match.Success ? match.Index : "not found");
     }
 }

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fun3.Lexers\Fun3.Lexers.csproj" />
+    <ProjectReference Include="..\Fun3.ProviderCreators\Fun3.ProviderCreators.csproj" />
   </ItemGroup>
 
 </Project>
