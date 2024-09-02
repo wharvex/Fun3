@@ -17,5 +17,7 @@ public class DefaultLexer(string[] lines) : ILexer
 
         var match = rg.Match(Lines[0]);
         Console.WriteLine(match.Success ? match.Index : "not found");
+        TokenService.PopulateRegistry();
+        Console.WriteLine(TokenService.Registry[pattern].FullName);
     }
 }
