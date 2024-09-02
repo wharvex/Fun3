@@ -7,7 +7,6 @@ namespace Fun3.StartInterpreter
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
             var lines = File.ReadAllLines(args[0]);
             var pc = new DefaultProviderCreator();
             pc.ConfigureProvider(lines);

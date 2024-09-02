@@ -2,11 +2,20 @@
 
 let fun greet...
 let arg str name
+let ret int status
     see "hi, " + name
+    iff name = "tim"...
+        set status, 1
+    els...
+        set status, 0
 
 let fun begin...
-let loc int age
-    run greet "tim"
-    set age, 36
-    iff 38 > age > 35...
-        see "you're almost not old"
+let arg str args[]
+let mut int response
+    run greet "tim", response
+    
+    ### ovr is a built-in int mut variable that automatically gets returned to the calling OS process when the program is over.
+    set ovr, response
+
+    ### out is a built-in function that exits the program when called.
+    out
