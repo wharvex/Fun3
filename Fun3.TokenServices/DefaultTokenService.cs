@@ -10,7 +10,9 @@ public class DefaultTokenService : ITokenService
 
     public void PopulateRegistry()
     {
-        Registry[@"\w+"] = typeof(WordToken);
+        Registry[@"^\w+"] = typeof(WordToken);
+        Registry[@"^###.*"] = typeof(CommentToken);
+        Registry[@"^\.\.\."] = typeof(EllipsisToken);
     }
 
     public IToken CreateToken(string pattern, int line, Match m)

@@ -12,12 +12,15 @@ public class DefaultLexer(string[] lines) : ILexer
 
     public void Lex()
     {
-        var pattern = @"\w+";
-        var rg = new Regex(pattern);
-
-        var match = rg.Match(Lines[0]);
-        Console.WriteLine(match.Success ? match.Index : "not found");
         TokenService.PopulateRegistry();
-        Console.WriteLine(TokenService.Registry[pattern].FullName);
+        TokenService
+            .Registry.Select(kvp =>
+            {
+                var rg = new Regex(kvp.Key);
+                return (Pattern: kvp.Key, Match: rg.Match(Lines[0]));
+            })
+            .Select(t => TokenService.CreateToken(t.Pattern, 0, t.Match))
+            .ToList()
+            .ForEach(Console.WriteLine);
     }
 }
