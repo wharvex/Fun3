@@ -1,8 +1,11 @@
-﻿namespace Fun3.Lexers;
+﻿using Microsoft.Extensions.DependencyInjection;
 
-public class DefaultLexer(string[] lines, ITokenService tokenService) : ILexer
+namespace Fun3.Lexers;
+
+public class DefaultLexer(string[] lines) : ILexer
 {
-    public ITokenService TokenService { get; set; } = tokenService;
+    public ITokenService TokenService { get; set; } =
+        ProviderContainer.Provider.GetRequiredService<ITokenService>();
 
     public string[] Lines { get; set; } = lines;
 
