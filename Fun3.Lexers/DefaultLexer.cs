@@ -14,6 +14,7 @@ public class DefaultLexer(string[] lines) : ILexer
     public void Lex()
     {
         TokenService.PopulateRegistry();
+        TokenService.PopulateRankings();
         Enumerable
             .Range(0, Lines.Length)
             .ToList()
@@ -50,44 +51,22 @@ public class DefaultLexer(string[] lines) : ILexer
                 var tokenTypes = string.Join(", ", w.Select(t => t?.ToString() ?? "N/A"));
                 var tokenOverlaps = string.Join(
                     "\n",
-                    overlaps.Select(tuple => tuple.Item1 + " overlaps " + tuple.Item2)
+                    overlaps.Select(
+                        tuple =>
+                            tuple.Item1
+                            + " ("
+                            + TokenService.Rankings[tuple.Item1.GetType()]
+                            + ") and "
+                            + tuple.Item2
+                            + " ("
+                            + TokenService.Rankings[tuple.Item2.GetType()]
+                            + ")"
+                    )
                 );
-                Console.WriteLine(tokenValues);
-                Console.WriteLine(tokenTypes);
-                Console.WriteLine(tokenOverlaps);
-                //TokenService
-                //    .Registry.Select(kvp =>
-                //    {
-                //        var rg = new Regex(kvp.Key);
-                //        var matches = rg.Matches(line);
-                //        return (
-                //            Tokens: matches.Select(m => TokenService.CreateToken(kvp.Key, i, m)),
-                //            KVP: kvp
-                //        );
-                //    })
-                //    .ToList()
-                //    .ForEach(tuple =>
-                //    {
-                //        var found = tuple.Tokens.Any(t => t is not null);
-                //        var foundString = found ? "yes" : "no";
-                //        var tokenVals = string.Join(
-                //            ", ",
-                //            tuple.Tokens.Select(t => t?.Value ?? "N/A")
-                //        );
-                //        var searchedToken = tuple.KVP.Value.FullName ?? "??";
-                //        var tokenRanges = string.Join(
-                //            "; ",
-                //            tuple.Tokens.Select(
-                //                (t, j) =>
-                //                    $"Token number: {j}, Token start column: {t?.StartColumn ?? -1}, Token end column: {t?.EndColumn ?? -1}"
-                //            )
-                //        );
-                //        Console.WriteLine($"Token type searched: {searchedToken}");
-                //        Console.WriteLine($"Any matches? {foundString}");
-                //        Console.WriteLine($"Found token vals: {tokenVals}");
-                //        Console.WriteLine($"Found token ranges: {tokenRanges}");
-                //        Console.WriteLine("\n");
-                //    });
+                Console.WriteLine($"\nTOKEN VALUES FOUND: {tokenValues}");
+                Console.WriteLine($"\nTOKEN TYPES FOUND: {tokenTypes}");
+                Console.WriteLine($"\nOVERLAPS FOUND: {tokenOverlaps}");
+                Console.WriteLine("\n");
             });
     }
 }
