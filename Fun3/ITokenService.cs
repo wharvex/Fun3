@@ -9,4 +9,5 @@ public interface ITokenService
     Dictionary<Type, int> Rankings { get; }
     void PopulateRankings();
     IToken? CreateToken(string pattern, int line, Match m);
+    List<IToken?> CreateLineTokens(string line, int lineNumber);
 }

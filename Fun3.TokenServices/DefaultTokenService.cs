@@ -30,6 +30,12 @@ public class DefaultTokenService : ITokenService
         Rankings[typeof(IToken)] = -1;
     }
 
+    public DefaultTokenService()
+    {
+        PopulateRegistry();
+        PopulateRankings();
+    }
+
     public IToken? CreateToken(string pattern, int line, Match m)
     {
         if (!m.Success)
@@ -43,5 +49,17 @@ public class DefaultTokenService : ITokenService
         ret.StartColumn = m.Index;
         ret.EndColumn = m.Index + m.Length - 1;
         return ret;
+    }
+
+    public List<IToken?> CreateLineTokens(string line, int lineNumber)
+    {
+        return Registry
+            .SelectMany(kvp =>
+            {
+                var rg = new Regex(kvp.Key);
+                var matches = rg.Matches(line);
+                return matches.Select(m => CreateToken(kvp.Key, lineNumber, m));
+            })
+            .ToList();
     }
 }
