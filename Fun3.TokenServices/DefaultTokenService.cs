@@ -21,12 +21,12 @@ public class DefaultTokenService : ITokenService
 
     public void PopulateRankings()
     {
-        Rankings[typeof(WordToken)] = 0;
-        Rankings[typeof(CommentToken)] = 2;
-        Rankings[typeof(EllipsisToken)] = 0;
+        Rankings[typeof(WordToken)] = 1;
+        Rankings[typeof(CommentToken)] = 3;
+        Rankings[typeof(EllipsisToken)] = 1;
         Rankings[typeof(IndentToken)] = 0;
-        Rankings[typeof(PlusToken)] = 0;
-        Rankings[typeof(StringLiteralToken)] = 1;
+        Rankings[typeof(PlusToken)] = 1;
+        Rankings[typeof(StringLiteralToken)] = 2;
         Rankings[typeof(IToken)] = -1;
     }
 

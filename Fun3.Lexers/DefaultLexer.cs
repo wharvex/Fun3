@@ -1,6 +1,4 @@
-﻿using System.Linq.Expressions;
-using System.Text.RegularExpressions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Fun3.Lexers;
 
@@ -20,7 +18,24 @@ public class DefaultLexer(string[] lines) : ILexer
             Console.WriteLine($"Line {lineNumber}: {line}");
             var lineTokens = TokenService.CreateLineTokens(line, lineNumber);
             var overlaps = CollectOverlaps(lineTokens);
-            DebugPrint(lineTokens, overlaps);
+            var validLineTokens = lineTokens
+                .Where(tok =>
+                {
+                    if (tok is null)
+                        return false;
+                    var ol = overlaps.FirstOrDefault(mol => mol.Item2 == tok || mol.Item1 == tok);
+                    if (ol == default)
+                        return true;
+                    var otherOl =
+                        tok == ol.Item2
+                            ? ol.Item1
+                            : ol.Item2 ?? throw new InvalidOperationException();
+                    return TokenService.Rankings[tok.GetType()]
+                        > TokenService.Rankings[otherOl.GetType()];
+                })
+                .Select(mtok => mtok ?? throw new InvalidOperationException())
+                .ToList();
+            DebugPrint(lineTokens, overlaps, validLineTokens);
         }
     }
 
@@ -45,26 +60,35 @@ public class DefaultLexer(string[] lines) : ILexer
         return ret;
     }
 
-    private void DebugPrint(List<IToken?> lineTokens, List<(IToken, IToken)> overlaps)
+    private void DebugPrint(
+        List<IToken?> lineTokens,
+        List<(IToken, IToken)> overlaps,
+        List<IToken> validLineTokens
+    )
     {
         var tokenValues = string.Join(", ", lineTokens.Select(t => t?.Value ?? "N/A"));
         var tokenTypes = string.Join(", ", lineTokens.Select(t => t?.ToString() ?? "N/A"));
+        var validTokenValues = string.Join(", ", validLineTokens);
+        var validTokenTypes = string.Join(", ", validLineTokens);
         var tokenOverlaps = string.Join(
             "\n",
-            overlaps.Select(tuple =>
-                tuple.Item1
-                + " (Rank "
-                + TokenService.Rankings[tuple.Item1.GetType()]
-                + ") and "
-                + tuple.Item2
-                + " (Rank "
-                + TokenService.Rankings[tuple.Item2.GetType()]
-                + ")"
+            overlaps.Select(
+                tuple =>
+                    tuple.Item1
+                    + " (Rank "
+                    + TokenService.Rankings[tuple.Item1.GetType()]
+                    + ") and "
+                    + tuple.Item2
+                    + " (Rank "
+                    + TokenService.Rankings[tuple.Item2.GetType()]
+                    + ")"
             )
         );
         Console.WriteLine($"\nTOKEN VALUES FOUND: {tokenValues}");
         Console.WriteLine($"\nTOKEN TYPES FOUND: {tokenTypes}");
         Console.WriteLine($"\nOVERLAPS FOUND: {tokenOverlaps}");
+        Console.WriteLine($"\nVALID TOKEN VALUES FOUND: {validTokenValues}");
+        Console.WriteLine($"\nVALID TOKEN TYPES FOUND: {validTokenTypes}");
         Console.WriteLine("\n");
     }
 }
